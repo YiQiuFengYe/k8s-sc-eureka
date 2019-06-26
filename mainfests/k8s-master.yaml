@@ -1,0 +1,83 @@
+
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: eureka-master
+  namespace: dev
+  labels:
+    app: eureka-master
+spec:
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: eureka-master
+    spec:
+      restartPolicy: Always
+      imagePullSecrets:
+      - name: smile
+      containers:
+      - image: <IMAGE>:<IMAGE_TAG>
+        name: eureka-master
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8761
+          name: server-port
+        env:
+        - name: JAVA_OPTS
+          value: ""
+        - name: DIY_EUREKA_HOST_MASTER
+          value: "eureka-master.dev.svc.cluster.local"
+        - name: DIY_EUREKA_HOST_BACKUP01
+          value: "eureka-backup01.dev.svc.cluster.local"
+        - name: DIY_EUREKA_HOST_BACKUP02
+          value: "eureka-backup02.dev.svc.cluster.local"
+        - name: DIY_EUREKA_SERVER_PORT
+          value: "8761"
+        - name: DIY_EUREKA_USER
+          value: "smile"
+        - name: DIY_EUREKA_PASSWORD
+          value: "smilelxy"
+        - name: CONFIG_PROFILE
+          value: "master"
+
+---
+
+kind: Service
+apiVersion: v1
+metadata:
+  name: eureka-master
+  namespace: dev
+  labels:
+    app: eureka-master
+spec:
+  selector:
+    app: eureka-master
+  type:  ClusterIP
+  ports:
+  - name: server-port
+    port: 8761
+    targetPort:  server-port
+
+---
+
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: eureka-master
+  namespace: dev
+  labels:
+    app: eureka-master
+spec:
+  rules:
+  - host: eureka-master.smile.com
+    http:
+        paths:
+        - path: /
+          backend:
+            serviceName: eureka-master
+            servicePort: 8761

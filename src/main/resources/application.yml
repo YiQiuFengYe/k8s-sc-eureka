@@ -1,0 +1,20 @@
+spring:
+  profiles:
+    active: ${spring.profile.active:master}
+  security:
+    user:
+      name: ${diy.eureka.user:smile}
+      password: ${diy.eureka.password:smilelxy}
+  application:
+    name: eureka-server
+server:
+  port: ${diy.eureka.server.port:8761}
+
+eureka:
+  instance:
+    hostname:  ${spring.cloud.client.ip-address}
+    instance-id: ${spring.cloud.client.ip-address}:${server.port}
+    prefer-ip-address: true
+  client:
+    register-with-eureka: false
+    fetch-registry: false

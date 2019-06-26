@@ -1,0 +1,4 @@
+eureka:
+  client:
+    service-url:
+      defaultZone: http://${diy.eureka.user:smile}:${diy.eureka.password:smilelxy}@${diy.eureka.host.master:eureka-master}:${diy.eureka.server.port:8761}/eureka,http://${diy.eureka.user:smile}:${diy.eureka.password:smilelxy}@${diy.eureka.host.backup02:eureka-backup02}:${diy.eureka.server.port:8761}/eureka
