@@ -76,8 +76,8 @@ spec:
   rules:
   - host: eureka-backup02.smile.com
     http:
-        paths:
-        - path: /
-          backend:
-            serviceName: eureka-backup02
-            servicePort: 8761
+      paths:
+      - path: /
+        backend:
+          serviceName: eureka-backup02
+          servicePort: 8761
